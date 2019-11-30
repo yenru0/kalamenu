@@ -1,0 +1,23 @@
+main: yenru0.yrkaier.kalamenu.Main
+name: KalaMenu
+version: "0.1a"
+description:
+  "a Kala the menu!"
+author: yenru0
+commands:
+  chest:
+    description: 상자.
+  deposit:
+    description: 경험치를 서버에 갖다 바치다.
+  pay:
+    description: 경험치를 플레이어에 갖다 바치다.
+  withdraw:
+    description: 경험치를 서버에서 강탈하다.
+  credit:
+    description: 경험치를 알림 당하다.
+  tradebible:
+    description: @임시용, 성경책 교환용
+
+
+
+
