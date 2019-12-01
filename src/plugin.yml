@@ -16,7 +16,7 @@ commands:
   credit:
     description: 경험치를 알림 당하다.
   tradebible:
-    description: @임시용, 성경책 교환용
+    description: 임시용, 성경책 교환용
 
 
 

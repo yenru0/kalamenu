@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -89,6 +90,8 @@ class Main : JavaPlugin(), Listener {
             }
         }
     }
+
+
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val player : Player = sender as Player
@@ -174,7 +177,6 @@ class Main : JavaPlugin(), Listener {
                     }
                 }
             }
-
         }
 
         else if (label.equals("withdraw", true)) {
@@ -216,14 +218,16 @@ class Main : JavaPlugin(), Listener {
 
         else if (label.equals("tradebible", true)) {
             val remainAmount = get_expcoin_playerdata(player.uniqueId.toString())
-            val amount = 20
+            val amount = 16
             if (remainAmount - amount >= 0){
                 player.inventory.addItem(KalaItems.Bible.v.itemstack)
-                player.sendMessage("${ChatColor.GOLD}성경책(20 경험치 어치)가 성공적으로 교환되었습니다.")
+                add_expcoin_playerdata(player.uniqueId.toString(), -amount)
+                player.sendMessage("${ChatColor.GOLD}성경책(${amount} 경험치 어치)가 성공적으로 교환되었습니다.")
             } else {
                 player.sendMessage("${ChatColor.RED}잉여 경험치가 부족합니다. 더 많은 경험치를 입금하세요.")
             }
         }
+
 
         return false
     }
