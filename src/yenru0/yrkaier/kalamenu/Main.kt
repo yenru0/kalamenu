@@ -228,7 +228,6 @@ class Main : JavaPlugin(), Listener {
             }
         }
 
-
         return false
     }
 
