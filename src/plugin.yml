@@ -1,6 +1,6 @@
 main: yenru0.yrkaier.kalamenu.Main
 name: KalaMenu
-version: "0.1b"
+version: "0.2a"
 description:
   "a Kala the menu!"
 author: yenru0
@@ -16,7 +16,9 @@ commands:
   credit:
     description: 경험치를 알림 당하다.
   tradebible:
-    description: 임시용, 성경책 교환용
+    description: legacy 성경책 교환용
+  buy:
+    description: 어떤 것들을 구매하려고 하다.
 
 
 

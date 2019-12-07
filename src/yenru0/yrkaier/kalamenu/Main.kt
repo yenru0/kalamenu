@@ -13,6 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -29,7 +30,6 @@ class Main : JavaPlugin(), Listener {
     private lateinit var uidNameMap : HashMap<String, String>
 
 
-
     val ns = NamespacedKey(this, this.description.name)
 
     companion object {
@@ -39,7 +39,6 @@ class Main : JavaPlugin(), Listener {
 
     }
     override fun onEnable() {
-
         pm.registerEvents(this, this)
         pm.registerEvents(KalaItemEvent(), this)
         log.info("${description.name} ${description.version} ${description.authors[0]} 활성화")
@@ -84,8 +83,39 @@ class Main : JavaPlugin(), Listener {
                     cf.set("inventory.content", content)
                     cf.save(f)
                 }
-                TypeInventory.TypeId.SELL -> {
 
+                else -> return
+            }
+        }
+    }
+
+    @EventHandler fun whenPlayerBuyCustoma(e: InventoryClickEvent) {
+        val player = e.whoClicked as Player
+        if (e.inventory.holder is TypeInventory) {
+            val typeinv = e.inventory.holder as TypeInventory
+            when (typeinv.type) {
+                TypeInventory.TypeId.BUY -> {
+
+                    if (e.currentItem != null) {
+                        for (kala in KalaItems.values()) {
+                            if (KalaUtil().findKalaId(e.currentItem!!) == kala.v.kalaId) {
+                                val remainAmount = get_expcoin_playerdata(player.uniqueId.toString())
+                                val amount = kala.v.kalaCost
+                                if (remainAmount - amount >= 0){
+                                    player.inventory.addItem(kala.v.itemstack)
+                                    add_expcoin_playerdata(player.uniqueId.toString(), -amount)
+                                    player.sendMessage("${ChatColor.GOLD}성경책(${amount} 경험치 어치)가 성공적으로 교환되었습니다.")
+                                } else {
+                                    player.sendMessage("${ChatColor.RED}잉여 경험치가 부족합니다. 더 많은 경험치를 입금하세요.")
+                                }
+                            }
+                        }
+                        e.isCancelled = true
+                    }
+                }
+
+                else -> {
+                    return
                 }
             }
         }
@@ -213,12 +243,12 @@ class Main : JavaPlugin(), Listener {
         }
 
         else if (label.equals("buy", true)) {
-
+            player.openInventory(TypeInventory("", type=TypeInventory.TypeId.BUY).inventory)
         }
 
         else if (label.equals("tradebible", true)) {
             val remainAmount = get_expcoin_playerdata(player.uniqueId.toString())
-            val amount = 16
+            val amount = KalaUtil().findKalaCost(KalaItems.Bible.v.itemstack) ?: 0
             if (remainAmount - amount >= 0){
                 player.inventory.addItem(KalaItems.Bible.v.itemstack)
                 add_expcoin_playerdata(player.uniqueId.toString(), -amount)

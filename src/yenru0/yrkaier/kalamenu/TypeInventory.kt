@@ -8,7 +8,7 @@ import org.bukkit.inventory.InventoryHolder
 class TypeInventory : InventoryHolder {
 
     enum class TypeId{
-        CCHEST, SELL, TRADE
+        CCHEST, SELL, TRADE, BUY
     }
 
     lateinit var inven: Inventory
@@ -25,12 +25,19 @@ class TypeInventory : InventoryHolder {
     }
 
     constructor(name:String = "null", type: TypeId?) {
+        this.type = type
         when(type) {
             TypeId.CCHEST, TypeId.TRADE -> {
                 this.inven = Bukkit.createInventory(this, 27, name)
             }
             TypeId.SELL -> {
                 this.inven = Bukkit.createInventory(this, 18, "sell gui")
+            }
+            TypeId.BUY -> {
+                this.inven = Bukkit.createInventory(this, 9, "buy gui")
+                this.inven.addItem(KalaItems.Bible.v.itemstack)
+                this.inven.addItem(KalaItems.BibleR.v.itemstack)
+
             }
         }
     }
